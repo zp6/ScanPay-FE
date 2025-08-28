@@ -6,14 +6,16 @@ import { useAuth } from "@/hooks/use-auth"
 import { DashboardNav } from "@/components/dashboard/dashboard-nav"
 import { CardList } from "@/components/cards/card-list"
 import { AddCardModal } from "@/components/cards/add-card-modal"
+import { CardCustomization } from "@/components/cards/card-customization"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cardService, type Card as CardType } from "@/lib/cards"
 import { useToast } from "@/hooks/use-toast"
-import { CreditCard, DollarSign, TrendingUp, Calendar, Save } from "lucide-react"
+import { CreditCard, DollarSign, TrendingUp, Calendar, Save, Palette, Cloud } from "lucide-react"
 
 export default function CardsPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth()
@@ -126,6 +128,9 @@ export default function CardsPage() {
             </Card>
           </div>
 
+          {/* IPFS Card Customization section */}
+          <CardCustomization />
+
           {/* Card List */}
           <CardList key={refreshTrigger} onAddCard={() => setShowAddModal(true)} onCardSettings={handleCardSettings} />
         </div>
@@ -142,62 +147,96 @@ export default function CardsPage() {
           </DialogHeader>
 
           {selectedCard && (
-            <div className="space-y-6">
-              <div className="text-center">
-                <h3 className="font-semibold">{selectedCard.nickname || "ScanPay Card"}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {cardService.formatCardNumber(selectedCard.last4, selectedCard.brand)}
-                </p>
-              </div>
+            <Tabs defaultValue="limits" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="limits">Spend Limits</TabsTrigger>
+                <TabsTrigger value="design">
+                  <Palette className="w-4 h-4 mr-2" />
+                  Design
+                </TabsTrigger>
+              </TabsList>
 
-              <div className="space-y-4">
-                <h4 className="font-medium">Spend Limits</h4>
-
-                <div className="space-y-2">
-                  <Label htmlFor="daily">Daily Limit</Label>
-                  <Input
-                    id="daily"
-                    type="number"
-                    value={spendLimits.daily}
-                    onChange={(e) => setSpendLimits({ ...spendLimits, daily: Number.parseFloat(e.target.value) || 0 })}
-                  />
+              <TabsContent value="limits" className="space-y-6">
+                <div className="text-center">
+                  <h3 className="font-semibold">{selectedCard.nickname || "ScanPay Card"}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {cardService.formatCardNumber(selectedCard.last4, selectedCard.brand)}
+                  </p>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="monthly">Monthly Limit</Label>
-                  <Input
-                    id="monthly"
-                    type="number"
-                    value={spendLimits.monthly}
-                    onChange={(e) =>
-                      setSpendLimits({ ...spendLimits, monthly: Number.parseFloat(e.target.value) || 0 })
-                    }
-                  />
+                <div className="space-y-4">
+                  <h4 className="font-medium">Spend Limits</h4>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="daily">Daily Limit</Label>
+                    <Input
+                      id="daily"
+                      type="number"
+                      value={spendLimits.daily}
+                      onChange={(e) =>
+                        setSpendLimits({ ...spendLimits, daily: Number.parseFloat(e.target.value) || 0 })
+                      }
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="monthly">Monthly Limit</Label>
+                    <Input
+                      id="monthly"
+                      type="number"
+                      value={spendLimits.monthly}
+                      onChange={(e) =>
+                        setSpendLimits({ ...spendLimits, monthly: Number.parseFloat(e.target.value) || 0 })
+                      }
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="perTransaction">Per Transaction Limit</Label>
+                    <Input
+                      id="perTransaction"
+                      type="number"
+                      value={spendLimits.perTransaction}
+                      onChange={(e) =>
+                        setSpendLimits({ ...spendLimits, perTransaction: Number.parseFloat(e.target.value) || 0 })
+                      }
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="perTransaction">Per Transaction Limit</Label>
-                  <Input
-                    id="perTransaction"
-                    type="number"
-                    value={spendLimits.perTransaction}
-                    onChange={(e) =>
-                      setSpendLimits({ ...spendLimits, perTransaction: Number.parseFloat(e.target.value) || 0 })
-                    }
-                  />
+                <div className="flex gap-3">
+                  <Button variant="outline" onClick={() => setSelectedCard(null)} className="flex-1">
+                    Cancel
+                  </Button>
+                  <Button onClick={handleSaveSettings} className="flex-1">
+                    <Save className="w-4 h-4 mr-2" />
+                    Save Changes
+                  </Button>
                 </div>
-              </div>
+              </TabsContent>
 
-              <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setSelectedCard(null)} className="flex-1">
-                  Cancel
-                </Button>
-                <Button onClick={handleSaveSettings} className="flex-1">
-                  <Save className="w-4 h-4 mr-2" />
-                  Save Changes
-                </Button>
-              </div>
-            </div>
+              <TabsContent value="design" className="space-y-4">
+                {/* IPFS-powered card design customization */}
+                <div className="text-center">
+                  <h3 className="font-semibold mb-2">Customize Card Design</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Upload custom backgrounds and logos stored on IPFS
+                  </p>
+                </div>
+
+                <CardCustomization cardId={selectedCard.id} compact />
+
+                <div className="flex gap-3 pt-4">
+                  <Button variant="outline" onClick={() => setSelectedCard(null)} className="flex-1">
+                    Cancel
+                  </Button>
+                  <Button onClick={() => setSelectedCard(null)} className="flex-1">
+                    <Cloud className="w-4 h-4 mr-2" />
+                    Apply Design
+                  </Button>
+                </div>
+              </TabsContent>
+            </Tabs>
           )}
         </DialogContent>
       </Dialog>
