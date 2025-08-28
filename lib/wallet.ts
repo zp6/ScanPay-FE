@@ -28,7 +28,7 @@ export interface WalletBalance {
   tokens: Token[]
 }
 
-// Mock data for demonstration
+// Supported chains configuration
 export const supportedChains: Chain[] = [
   {
     id: 1,
@@ -72,112 +72,21 @@ export const supportedChains: Chain[] = [
   },
 ]
 
-export const mockWalletBalances: WalletBalance[] = [
-  {
-    chainId: 1,
-    chainName: "Ethereum",
-    totalBalanceUSD: 4250.75,
-    tokens: [
-      {
-        symbol: "ETH",
-        name: "Ethereum",
-        address: "0x0000000000000000000000000000000000000000",
-        decimals: 18,
-        balance: "1.2345",
-        balanceUSD: 2469.15,
-        priceUSD: 2000.5,
-        change24h: 2.5,
-      },
-      {
-        symbol: "USDC",
-        name: "USD Coin",
-        address: "0xA0b86a33E6441b8e8C7C7b0b8e8C7C7b0b8e8C7C",
-        decimals: 6,
-        balance: "1500.00",
-        balanceUSD: 1500.0,
-        priceUSD: 1.0,
-        change24h: 0.1,
-      },
-      {
-        symbol: "UNI",
-        name: "Uniswap",
-        address: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
-        decimals: 18,
-        balance: "45.67",
-        balanceUSD: 281.6,
-        priceUSD: 6.17,
-        change24h: -1.2,
-      },
-    ],
-  },
-  {
-    chainId: 8453,
-    chainName: "Base",
-    totalBalanceUSD: 1850.25,
-    tokens: [
-      {
-        symbol: "ETH",
-        name: "Ethereum",
-        address: "0x0000000000000000000000000000000000000000",
-        decimals: 18,
-        balance: "0.8234",
-        balanceUSD: 1647.25,
-        priceUSD: 2000.5,
-        change24h: 2.5,
-      },
-      {
-        symbol: "USDC",
-        name: "USD Coin",
-        address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-        decimals: 6,
-        balance: "203.00",
-        balanceUSD: 203.0,
-        priceUSD: 1.0,
-        change24h: 0.1,
-      },
-    ],
-  },
-  {
-    chainId: 137,
-    chainName: "Polygon",
-    totalBalanceUSD: 892.4,
-    tokens: [
-      {
-        symbol: "MATIC",
-        name: "Polygon",
-        address: "0x0000000000000000000000000000000000000000",
-        decimals: 18,
-        balance: "1250.75",
-        balanceUSD: 892.4,
-        priceUSD: 0.714,
-        change24h: 3.2,
-      },
-    ],
-  },
-]
-
-// Mock wallet service
+// Wallet service
 export const walletService = {
   async getBalances(address: string): Promise<WalletBalance[]> {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    return mockWalletBalances
+    console.warn("Wallet service not implemented - connect to thirdweb SDK")
+    return []
   },
 
   async getTokenPrice(symbol: string): Promise<number> {
-    await new Promise((resolve) => setTimeout(resolve, 500))
-    const prices: Record<string, number> = {
-      ETH: 2000.5,
-      USDC: 1.0,
-      UNI: 6.17,
-      MATIC: 0.714,
-    }
-    return prices[symbol] || 0
+    console.warn("Price service not implemented - connect to price API")
+    return 0
   },
 
   async estimateGas(chainId: number, transaction: any): Promise<string> {
-    await new Promise((resolve) => setTimeout(resolve, 800))
-    return "0.0021" // ETH
+    console.warn("Gas estimation not implemented - connect to Web3 provider")
+    return "0.001"
   },
 
   formatBalance(balance: string, decimals: number): string {

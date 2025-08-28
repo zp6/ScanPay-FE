@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { QrCode, Send, Download, ArrowUpDown } from "lucide-react"
+import { motion } from "framer-motion"
 
 interface QuickActionsProps {
   onScanQR: () => void
@@ -50,19 +51,29 @@ export function QuickActions({ onScanQR, onSend, onReceive, onSwap }: QuickActio
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-3">
-          {actions.map((action) => (
-            <Button
+          {actions.map((action, index) => (
+            <motion.div
               key={action.label}
-              variant={action.variant}
-              className="h-auto flex-col gap-2 p-4"
-              onClick={action.onClick}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <action.icon className="w-6 h-6" />
-              <div className="text-center">
-                <div className="font-medium text-sm">{action.label}</div>
-                <div className="text-xs text-muted-foreground">{action.description}</div>
-              </div>
-            </Button>
+              <Button
+                variant={action.variant}
+                className="h-auto flex-col gap-2 p-4 w-full transition-all duration-200 hover:shadow-md"
+                onClick={action.onClick}
+              >
+                <motion.div whileHover={{ rotate: action.label === "Swap" ? 180 : 0 }} transition={{ duration: 0.3 }}>
+                  <action.icon className="w-6 h-6" />
+                </motion.div>
+                <div className="text-center">
+                  <div className="font-medium text-sm">{action.label}</div>
+                  <div className="text-xs text-muted-foreground">{action.description}</div>
+                </div>
+              </Button>
+            </motion.div>
           ))}
         </div>
       </CardContent>

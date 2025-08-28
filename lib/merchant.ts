@@ -20,72 +20,14 @@ export interface GeneratedQR {
   isActive: boolean
 }
 
-// Mock merchant service
+// Merchant service
 export const merchantService = {
   async generateQR(request: MerchantQRRequest): Promise<GeneratedQR> {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    const qrData = JSON.stringify({
-      recipient: request.recipient,
-      amount: request.amount,
-      currency: request.currency,
-      chainId: request.chainId || 1,
-      merchantName: request.merchantName,
-      memo: request.memo,
-      timestamp: Date.now(),
-    })
-
-    // In a real app, this would generate an actual QR code image
-    const qrCodeUrl = `/placeholder.svg?height=200&width=200&query=QR code for ${request.amount} ${request.currency}`
-
-    return {
-      id: Math.random().toString(36).substr(2, 9),
-      qrData,
-      qrCodeUrl,
-      request,
-      createdAt: new Date(),
-      scannedCount: 0,
-      isActive: true,
-    }
+    throw new Error("QR generation not implemented - connect to QR service API")
   },
 
   async getQRHistory(): Promise<GeneratedQR[]> {
-    await new Promise((resolve) => setTimeout(resolve, 500))
-
-    // Mock QR history
-    return [
-      {
-        id: "qr1",
-        qrData: JSON.stringify({ amount: "25.00", currency: "USDC", recipient: "0x123..." }),
-        qrCodeUrl: "/qr-code-for-25-usdc.png",
-        request: {
-          amount: "25.00",
-          currency: "USDC",
-          recipient: "0x123a456b789c012d345e678f901a234b567c890d",
-          merchantName: "Coffee Shop",
-          memo: "Latte + Pastry",
-        },
-        createdAt: new Date(Date.now() - 1000 * 60 * 30),
-        scannedCount: 3,
-        isActive: true,
-      },
-      {
-        id: "qr2",
-        qrData: JSON.stringify({ amount: "0.05", currency: "ETH", recipient: "0x456..." }),
-        qrCodeUrl: "/qr-code-for-0-05-eth.png",
-        request: {
-          amount: "0.05",
-          currency: "ETH",
-          recipient: "0x456b789c012d345e678f901a234b567c890d123a",
-          merchantName: "Tech Store",
-          memo: "USB Cable",
-        },
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
-        scannedCount: 1,
-        isActive: false,
-      },
-    ]
+    throw new Error("QR history not implemented - connect to merchant API")
   },
 
   formatQRData(request: MerchantQRRequest): string {

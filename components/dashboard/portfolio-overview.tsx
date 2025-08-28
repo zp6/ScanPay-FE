@@ -9,15 +9,14 @@ import { useState } from "react"
 
 interface PortfolioOverviewProps {
   totalBalance: number
+  change24h?: number
   isLoading: boolean
   onRefresh: () => void
 }
 
-export function PortfolioOverview({ totalBalance, isLoading, onRefresh }: PortfolioOverviewProps) {
+export function PortfolioOverview({ totalBalance, change24h = 0, isLoading, onRefresh }: PortfolioOverviewProps) {
   const [isHidden, setIsHidden] = useState(false)
 
-  // Mock 24h change - in real app, calculate from historical data
-  const change24h = 2.34
   const changeAmount = totalBalance * (change24h / 100)
 
   return (
@@ -39,7 +38,7 @@ export function PortfolioOverview({ totalBalance, isLoading, onRefresh }: Portfo
       <CardContent>
         <div className="flex items-baseline gap-4">
           <div className="text-4xl font-bold">{isHidden ? "••••••••" : walletService.formatUSD(totalBalance)}</div>
-          {!isHidden && (
+          {!isHidden && change24h !== 0 && (
             <Badge variant={change24h >= 0 ? "default" : "destructive"} className="text-sm">
               {change24h >= 0 ? <TrendingUp className="w-4 h-4 mr-1" /> : <TrendingDown className="w-4 h-4 mr-1" />}
               {change24h >= 0 ? "+" : ""}
