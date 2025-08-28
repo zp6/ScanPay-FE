@@ -14,6 +14,7 @@ import {
 } from "@/lib/qr-scanner"
 import { useToast } from "@/hooks/use-toast"
 import { Loader2 } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 
 export default function ScanPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth()
@@ -99,7 +100,13 @@ export default function ScanPage() {
   if (authLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin" />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </motion.div>
       </div>
     )
   }
@@ -110,17 +117,61 @@ export default function ScanPage() {
 
   return (
     <>
-      {showScanner && <QRScanner onScanResult={handleScanResult} onClose={handleCloseScanner} />}
+      <AnimatePresence>
+        {showScanner && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <QRScanner onScanResult={handleScanResult} onClose={handleCloseScanner} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {isProcessingQR && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-background p-6 rounded-lg text-center">
-            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-            <p className="text-lg font-semibold">Processing QR Code...</p>
-            <p className="text-muted-foreground">Getting AI routing suggestions</p>
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {isProcessingQR && (
+          <motion.div
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <motion.div
+              className="bg-background p-6 rounded-lg text-center shadow-xl"
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+              >
+                <Loader2 className="w-8 h-8 mx-auto mb-4 text-primary" />
+              </motion.div>
+              <motion.p
+                className="text-lg font-semibold"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                Processing QR Code...
+              </motion.p>
+              <motion.p
+                className="text-muted-foreground"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                Getting AI routing suggestions
+              </motion.p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <PaymentSummary
         open={!!paymentSummary}

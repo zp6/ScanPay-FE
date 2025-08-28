@@ -48,16 +48,7 @@ export function WalletConnectModal({ open, onOpenChange }: WalletConnectModalPro
   const handleWalletConnect = async (walletId: string) => {
     setIsConnecting(walletId)
     try {
-      // Simulate wallet connection - in real app, use actual wallet SDKs
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      const mockAddress = "0x742d35Cc6634C0532925a3b8D4C9db96590b5b8c"
-      await connectWallet(mockAddress)
-
-      toast({
-        title: "Wallet connected!",
-        description: `Successfully connected to ${wallets.find((w) => w.id === walletId)?.name}`,
-      })
-      onOpenChange(false)
+      throw new Error("Wallet connection not implemented - integrate with thirdweb SDK")
     } catch (error) {
       toast({
         title: "Connection failed",

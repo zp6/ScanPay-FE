@@ -11,6 +11,8 @@ import { QuickActions } from "@/components/dashboard/quick-actions"
 import { RecentActivity } from "@/components/dashboard/recent-activity"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { FadeIn } from "@/components/ui/fade-in"
+import { SlideUp } from "@/components/ui/slide-up"
 import { useState } from "react"
 
 export default function DashboardPage() {
@@ -77,53 +79,59 @@ export default function DashboardPage() {
       <DashboardNav />
 
       <main className="container mx-auto px-4 py-8">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {/* Portfolio Overview */}
-          <PortfolioOverview totalBalance={totalBalanceUSD} isLoading={walletLoading} onRefresh={refreshBalances} />
+        <FadeIn>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <SlideUp delay={0.1}>
+              <PortfolioOverview totalBalance={totalBalanceUSD} isLoading={walletLoading} onRefresh={refreshBalances} />
+            </SlideUp>
 
-          {/* Balance Cards */}
-          {walletLoading ? (
-            <>
-              <Skeleton className="h-48" />
-              <Skeleton className="h-48" />
-              <Skeleton className="h-48" />
-            </>
-          ) : (
-            balances.map((balance) => (
-              <BalanceCard
-                key={balance.chainId}
-                balance={balance}
-                isHidden={hiddenChains.has(balance.chainId)}
-                onToggleVisibility={() => toggleChainVisibility(balance.chainId)}
+            {walletLoading ? (
+              <>
+                <Skeleton className="h-48" />
+                <Skeleton className="h-48" />
+                <Skeleton className="h-48" />
+              </>
+            ) : (
+              balances.map((balance, index) => (
+                <SlideUp key={balance.chainId} delay={0.2 + index * 0.1}>
+                  <BalanceCard
+                    balance={balance}
+                    isHidden={hiddenChains.has(balance.chainId)}
+                    onToggleVisibility={() => toggleChainVisibility(balance.chainId)}
+                  />
+                </SlideUp>
+              ))
+            )}
+
+            <SlideUp delay={0.4}>
+              <QuickActions
+                onScanQR={() => handleQuickAction("scan")}
+                onSend={() => handleQuickAction("send")}
+                onReceive={() => handleQuickAction("receive")}
+                onSwap={() => handleQuickAction("swap")}
               />
-            ))
-          )}
+            </SlideUp>
 
-          {/* Quick Actions */}
-          <QuickActions
-            onScanQR={() => handleQuickAction("scan")}
-            onSend={() => handleQuickAction("send")}
-            onReceive={() => handleQuickAction("receive")}
-            onSwap={() => handleQuickAction("swap")}
-          />
+            <SlideUp delay={0.5}>
+              <RecentActivity />
+            </SlideUp>
 
-          {/* Recent Activity */}
-          <RecentActivity />
-
-          {/* Empty state if no balances */}
-          {!walletLoading && balances.length === 0 && (
-            <Card className="col-span-full">
-              <CardContent className="flex flex-col items-center justify-center py-12">
-                <div className="text-center space-y-4">
-                  <h3 className="text-lg font-semibold">No wallet connected</h3>
-                  <p className="text-muted-foreground">
-                    Connect a wallet to view your balances and start making payments
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+            {!walletLoading && balances.length === 0 && (
+              <SlideUp delay={0.3}>
+                <Card className="col-span-full">
+                  <CardContent className="flex flex-col items-center justify-center py-12">
+                    <div className="text-center space-y-4">
+                      <h3 className="text-lg font-semibold">No wallet connected</h3>
+                      <p className="text-muted-foreground">
+                        Connect a wallet to view your balances and start making payments
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </SlideUp>
+            )}
+          </div>
+        </FadeIn>
       </main>
     </div>
   )

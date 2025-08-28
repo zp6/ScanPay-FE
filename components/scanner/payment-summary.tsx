@@ -209,3 +209,5 @@ export function PaymentSummaryComponent({ open, onOpenChange, summary, onConfirm
     </Dialog>
   )
 }
+
+export { PaymentSummaryComponent as PaymentSummary }
