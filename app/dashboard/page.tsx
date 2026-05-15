@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/use-auth"
 import { useWallet } from "@/hooks/use-wallet"
@@ -9,11 +9,11 @@ import { PortfolioOverview } from "@/components/dashboard/portfolio-overview"
 import { BalanceCard } from "@/components/dashboard/balance-card"
 import { QuickActions } from "@/components/dashboard/quick-actions"
 import { RecentActivity } from "@/components/dashboard/recent-activity"
+import { IPFSSection } from "@/components/dashboard/ipfs-section"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { FadeIn } from "@/components/ui/fade-in"
 import { SlideUp } from "@/components/ui/slide-up"
-import { useState } from "react"
 
 export default function DashboardPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth()
@@ -114,6 +114,12 @@ export default function DashboardPage() {
 
             <SlideUp delay={0.5}>
               <RecentActivity />
+            </SlideUp>
+
+            <SlideUp delay={0.6}>
+              <div className="col-span-full">
+                <IPFSSection />
+              </div>
             </SlideUp>
 
             {!walletLoading && balances.length === 0 && (
